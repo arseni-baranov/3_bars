@@ -19,7 +19,7 @@ def get_smallest_bar(bars):
 def get_closest_bar(bars):
 
     try:
-        latitude = float(input('Введите ширину:  '))
+        latitude = float(input('Введите широту:  '))
 
     except ValueError:
         latitude = None
