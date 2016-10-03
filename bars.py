@@ -10,14 +10,13 @@ def load_from_json(filepath):
 
 def get_biggest_bar(bars):
     maxPricedItem = max(bars, key=lambda x: x['Cells']['SeatsCount'])
-    print('Самый крупный бар: ' + maxPricedItem['Cells']['Name'])
+    return maxPricedItem['Cells']['Name']
 
 def get_smallest_bar(bars):
     minPricedItem = min(bars, key=lambda x: x['Cells']['SeatsCount'])
-    print('Самый маленький бар: ' + minPricedItem['Cells']['Name'])
+    return minPricedItem['Cells']['Name']
 
 def get_closest_bar(bars):
-    print('=========================================================')
 
     try:
         latitude = float(input('Введите ширину:  '))
@@ -27,32 +26,37 @@ def get_closest_bar(bars):
 
     if latitude is None:
         print('Извините, данные не верны')
-        exit()
 
     try:
         longitude = float(input('Введите долготу: '))
+
     except ValueError:
         latitude = None
 
     if longitude is None:
         print('Извините, данные не верны')
-        exit()
 
-    tmp = {}
+    bars_geo = {}
 
     for bar in bars:
-        tmp.update([(math.sqrt((bar['Cells']['geoData']['coordinates'][0] - longitude) *
+        bars_geo.update([(math.sqrt((bar['Cells']['geoData']['coordinates'][0] - longitude) *
                                (bar['Cells']['geoData']['coordinates'][0] - longitude) +
                                (bar['Cells']['geoData']['coordinates'][1] - latitude) *
                                (bar['Cells']['geoData']['coordinates'][1] - latitude)), bar['Cells']['Name'])])
 
-
-    print(min(tmp.keys()))
-    print(tmp.get(min(tmp.keys())))
+    return(bars_geo.get(min(bars_geo.keys())))
 
 
 if __name__ == '__main__':
-    bars = load_from_json('bars.json')
-    get_biggest_bar(bars)
-    get_smallest_bar(bars)
-    get_closest_bar(bars)
+
+    try:
+        bars = load_from_json(input('Введите название json файла с барами: '))
+    except FileNotFoundError:
+        print('Файла с таким названием не существует в директории с программой')
+        exit()
+
+    print('Самый крупный бар: ' + get_biggest_bar(bars))
+    print('Самый маленький бар: ' + get_smallest_bar(bars))
+    print('=========================================================')
+    print('Ближайший бар: ' + get_closest_bar(bars))
+
