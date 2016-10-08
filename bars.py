@@ -3,38 +3,35 @@ import json, math, os
 def load_from_json(filepath):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     bars_file = current_dir + '\\' + filepath
-    file = open(bars_file, "r", encoding="utf-8")
-
-    return json.loads(file.read())
+    with open(bars_file, "r", encoding="utf-8") as bars_file:
+        return json.loads(bars_file.read())
 
 
 def get_biggest_bar(bars):
-    maxPricedItem = max(bars, key=lambda x: x['Cells']['SeatsCount'])
-    return maxPricedItem['Cells']['Name']
+    max_priced_item = max(bars, key=lambda x: x['Cells']['SeatsCount'])
+    return max_priced_item['Cells']['Name']
 
 def get_smallest_bar(bars):
-    minPricedItem = min(bars, key=lambda x: x['Cells']['SeatsCount'])
-    return minPricedItem['Cells']['Name']
+    min_priced_item = min(bars, key=lambda x: x['Cells']['SeatsCount'])
+    return min_priced_item['Cells']['Name']
+
+def get_input(message):
+    try:
+        coordinates = float(input(message))
+
+    except ValueError:
+        coordinates = None
+
+    if coordinates is None:
+        print('Извините, данные не верны')
+
+    return coordinates
+
 
 def get_closest_bar(bars):
 
-    try:
-        latitude = float(input('Введите широту:  '))
-
-    except ValueError:
-        latitude = None
-
-    if latitude is None:
-        print('Извините, данные не верны')
-
-    try:
-        longitude = float(input('Введите долготу: '))
-
-    except ValueError:
-        latitude = None
-
-    if longitude is None:
-        print('Извините, данные не верны')
+    latitude = get_input('Введите широту: ')
+    longitude = get_input('Введите долготу: ')
 
     bars_geo = {}
 
