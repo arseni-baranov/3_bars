@@ -1,8 +1,14 @@
-import json, math, os
+import json
+import math
+import os
 
-def load_from_json(filepath):
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    bars_file = current_dir + '\\' + filepath
+
+def load_from_json(file_name):
+    current_dir = os.path.abspath(__file__)
+    script_name = os.path.basename(__file__)
+
+    bars_file = current_dir.replace(script_name, '') + file_name
+
     with open(bars_file, "r", encoding="utf-8") as bars_file:
         return json.loads(bars_file.read())
 
@@ -11,11 +17,13 @@ def get_biggest_bar(bars):
     max_priced_item = max(bars, key=lambda x: x['Cells']['SeatsCount'])
     return max_priced_item['Cells']['Name']
 
+
 def get_smallest_bar(bars):
     min_priced_item = min(bars, key=lambda x: x['Cells']['SeatsCount'])
     return min_priced_item['Cells']['Name']
 
-def get_input(message):
+
+def validate_input(message):
     try:
         coordinates = float(input(message))
 
@@ -28,10 +36,7 @@ def get_input(message):
     return coordinates
 
 
-def get_closest_bar(bars):
-
-    latitude = get_input('Введите широту: ')
-    longitude = get_input('Введите долготу: ')
+def get_closest_bar(bars, latitude, longitude):
 
     bars_geo = {}
 
@@ -41,7 +46,7 @@ def get_closest_bar(bars):
                                (bar['Cells']['geoData']['coordinates'][1] - latitude) *
                                (bar['Cells']['geoData']['coordinates'][1] - latitude)), bar['Cells']['Name'])])
 
-    return(bars_geo.get(min(bars_geo.keys())))
+    return bars_geo.get(min(bars_geo.keys()))
 
 
 if __name__ == '__main__':
@@ -55,5 +60,9 @@ if __name__ == '__main__':
     print('Самый крупный бар: ' + get_biggest_bar(bars))
     print('Самый маленький бар: ' + get_smallest_bar(bars))
     print('=========================================================')
-    print('Ближайший бар: ' + get_closest_bar(bars))
+
+    latitude = validate_input('Введите широту: ')
+    longitude = validate_input('Введите долготу: ')
+
+    print('Ближайший бар: ' + get_closest_bar(bars, latitude, longitude))
 
