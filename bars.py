@@ -1,13 +1,8 @@
 import json
 import math
-import os
 
 
-def load_from_json(file_name):
-    current_dir = os.path.abspath(__file__)
-    script_name = os.path.basename(__file__)
-
-    bars_file = current_dir.replace(script_name, '') + file_name
+def load_from_json(bars_file):
 
     with open(bars_file, "r", encoding="utf-8") as bars_file:
         return json.loads(bars_file.read())
@@ -52,7 +47,7 @@ def get_closest_bar(bars, latitude, longitude):
 if __name__ == '__main__':
 
     try:
-        bars = load_from_json(input('Введите название json файла с барами: '))
+        bars = load_from_json(input('Укажите путь к json файлу с барами: '))
     except FileNotFoundError:
         print('Файла с таким названием не существует в директории с программой')
         exit()
@@ -65,4 +60,3 @@ if __name__ == '__main__':
     longitude = validate_input('Введите долготу: ')
 
     print('Ближайший бар: ' + get_closest_bar(bars, latitude, longitude))
-
